@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客设计美化测试</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .test-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .test-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            border: 1px solid #e9ecef;
+        }
+        
+        .test-card h3 {
+            margin-bottom: 1rem;
+            color: #333;
+            font-size: 1.5rem;
+        }
+        
+        .color-swatch {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .color-primary {
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+        }
+        
+        .color-accent {
+            background: linear-gradient(135deg, #f72585 0%, #b5179e 100%);
+        }
+        
+        .color-warm {
+            background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+        }
+        
+        .component-demo {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .demo-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .demo-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏演示 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>📷 摄影博客</h1>
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="nav-link active">首页</a>
+                <a href="#" class="nav-link">分类</a>
+                <a href="#" class="nav-link">作品集</a>
+                <div class="search-container">
+                    <input type="text" id="testSearchInput" placeholder="搜索文章...">
+                    <button class="search-btn">搜索</button>
+                </div>
+                <a href="#" class="nav-link">登录</a>
+                <a href="#" class="nav-link">注册</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="test-container">
+        <div class="test-header">
+            <h1>博客设计美化效果展示</h1>
+            <p>以下展示了CSS改进后的设计元素和组件</p>
+        </div>
+        
+        <div class="test-grid">
+            <!-- 配色方案 -->
+            <div class="test-card">
+                <h3>配色方案</h3>
+                <p>新的配色方案更加现代化和协调</p>
+                
+                <div class="color-swatch color-primary">
+                    主色调: #4361ee → #3a0ca3
+                </div>
+                
+                <div class="color-swatch color-accent">
+                    强调色: #f72585 → #b5179e
+                </div>
+                
+                <div class="color-swatch color-warm">
+                    暖色调: #ff7e5f → #feb47b
+                </div>
+                
+                <div class="component-demo">
+                    <h4>CSS变量</h4>
+                    <p>使用了CSS自定义属性，便于主题管理</p>
+                    <div class="demo-card">
+                        <code>:root {
+  --primary-color: #4361ee;
+  --secondary-color: #3a0ca3;
+  --accent-color: #f72585;
+  --gradient-primary: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+}</code>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 组件展示 -->
+            <div class="test-card">
+                <h3>UI组件</h3>
+                <p>改进的按钮、卡片和表单元素</p>
+                
+                <div class="demo-buttons">
+                    <button class="btn-primary">主要按钮</button>
+                    <button class="btn-secondary" style="background: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px;">次要按钮</button>
+                </div>
+                
+                <div class="component-demo">
+                    <h4>卡片效果</h4>
+                    <p>悬停动画和阴影效果</p>
+                    <div class="demo-card">
+                        <h5>文章卡片</h5>
+                        <p>这是一个改进后的文章卡片示例，具有悬停效果和渐变边框。</p>
+                        <div class="article-meta">
+                            <span>📅 2025-12-23</span>
+                            <span>👤 作者</span>
+                            <span>🏷️ 摄影</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 动画效果 -->
+            <div class="test-card">
+                <h3>动画效果</h3>
+                <p>平滑的过渡和微交互</p>
+                
+                <div class="component-demo">
+                    <h4>悬停效果</h4>
+                    <p>卡片、按钮和链接都有平滑的悬停动画</p>
+                    
+                    <div class="demo-card" style="cursor: pointer;">
+                        <h5>悬停我试试</h5>
+                        <p>将鼠标悬停在这个卡片上，查看动画效果。</p>
+                    </div>
+                </div>
+                
+                <div class="component-demo">
+                    <h4>加载动画</h4>
+                    <p>改进的加载指示器</p>
+                    <div style="display: flex; justify-content: center; padding: 2rem;">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 文章卡片演示 -->
+        <div class="test-card" style="margin-top: 2rem;">
+            <h3>文章卡片设计</h3>
+            <p>改进的文章卡片布局和样式</p>
+            
+            <div class="articles-grid" style="margin-top: 2rem;">
+                <div class="article-card">
+                    <div class="article-title">摄影技巧：如何捕捉完美光线</div>
+                    <div class="article-meta">
+                        <span>📅 2025-12-22</span>
+                        <span>👤 张三</span>
+                        <span>🏷️ 摄影技巧</span>
+                    </div>
+                    <div class="article-excerpt">
+                        光线是摄影的灵魂。在这篇文章中，我们将探讨如何在不同环境下捕捉最佳光线，从黄金时刻到蓝色时刻，从室内自然光到人工布光...
+                    </div>
+                    <div class="article-stats">
+                        <span>👁️ 1.2k 浏览</span>
+                        <span>💬 45 评论</span>
+                        <span>❤️ 89 喜欢</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 侧边栏演示 -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-top: 3rem;">
+            <div class="test-card">
+                <h3>主要内容区域</h3>
+                <p>改进的内容布局和排版</p>
+                <p>字体从Segoe UI改为Inter，行高从1.6增加到1.7，提高了可读性。</p>
+                <p>背景使用了渐变效果，增加了视觉深度。</p>
+                <p>所有元素都有更圆润的边角（border-radius: 12px）。</p>
+            </div>
+            
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h4>文章分类</h4>
+                    <div class="category-item">
+                        <span class="category-name">风光摄影</span>
+                        <span class="category-count">12</span>
+                    </div>
+                    <div class="category-item">
+                        <span class="category-name">人像摄影</span>
+                        <span class="category-count">8</span>
+                    </div>
+                    <div class="category-item">
+                        <span class="category-name">街头摄影</span>
+                        <span class="category-count">5</span>
+                    </div>
+                    <div class="category-item">
+                        <span class="category-name">微距摄影</span>
+                        <span class="category-count">3</span>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h4>关于我</h4>
+                    <p>一名热爱摄影的创作者，专注于风光、人像和街头摄影。</p>
+                    <div class="photography-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">摄影作品</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">6</span>
+                            <span class="stat-label">文章分类</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">1000+</span>
+                            <span class="stat-label">照片拍摄</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-card" style="margin-top: 3rem; text-align: center;">
+            <h3>设计改进总结</h3>
+            <p>✅ 现代化配色方案</p>
+            <p>✅ 平滑的动画和过渡效果</p>
+            <p>✅ 改进的排版和可读性</p>
+            <p>✅ 响应式设计优化</p>
+            <p>✅ 更好的视觉层次和阴影效果</p>
+            <p>✅ 摄影主题的增强</p>
+            
+            <div style="margin-top: 2rem;">
+                <button class="btn-primary" onclick="window.location.href='index.html'">查看完整博客</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的交互演示
+        document.querySelectorAll('.demo-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // 搜索框交互
+        const searchInput = document.getElementById('testSearchInput');
+        if (searchInput) {
+            searchInput.addEventListener('focus', function() {
+                this.style.width = '280px';
+            });
+            
+            searchInput.addEventListener('blur', function() {
+                this.style.width = '220px';
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>摄影博客 - 捕捉光影的艺术</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>📷 摄影博客</h1>
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="nav-link" onclick="showHome()">首页</a>
+                <a href="#" class="nav-link" onclick="showCategories()">分类</a>
+                <a href="gallery.html" class="nav-link">作品集</a>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="搜索文章..." onkeypress="handleSearchKeyPress(event)">
+                    <button class="search-btn" onclick="performSearch()">搜索</button>
+                </div>
+                <a href="#" class="nav-link" onclick="showLogin()" id="loginLink">登录</a>
+                <a href="#" class="nav-link" onclick="showRegister()" id="registerLink">注册</a>
+                <a href="#" class="nav-link" onclick="showWriteArticle()" id="writeLink" style="display:none">写文章</a>
+                <a href="#" class="nav-link" onclick="showProfile()" id="profileLink" style="display:none"><i class="fas fa-user"></i> 个人中心</a>
+                <a href="#" class="nav-link" onclick="logout()" id="logoutLink" style="display:none">退出</a>
+                <span id="userInfo" style="display:none"></span>
+                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换夜间模式">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 首页内容 -->
+        <div id="homePage" class="page active">
+            <div class="hero-section">
+                <h2>捕捉光影的艺术</h2>
+                <p>分享摄影技巧、作品欣赏与创作心得</p>
+            </div>
+            
+            <div class="content-container">
+                <div class="articles-section">
+                    <h3>最新文章</h3>
+                    <div id="articlesList" class="articles-grid">
+                        <!-- 文章列表将通过JavaScript动态加载 -->
+                    </div>
+                    <div class="pagination" id="pagination">
+                        <!-- 分页控件 -->
+                    </div>
+                </div>
+                
+                <div class="sidebar">
+                    <div class="sidebar-section">
+                        <h4>文章分类</h4>
+                        <div id="categoriesList">
+                            <!-- 分类列表将通过JavaScript动态加载 -->
+                        </div>
+                    </div>
+                    <div class="sidebar-section">
+                        <h4>🏆 热门文章</h4>
+                        <div id="hotArticlesList">
+                            <!-- 热门文章将通过JavaScript动态加载 -->
+                        </div>
+                    </div>
+                    <div class="sidebar-section">
+                        <h4>关于我</h4>
+                        <p>一名热爱摄影的创作者，专注于风光、人像和街头摄影。希望通过这个博客分享我的摄影经验和作品。</p>
+                        <div class="photography-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">50+</span>
+                                <span class="stat-label">摄影作品</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">6</span>
+                                <span class="stat-label">文章分类</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">1000+</span>
+                                <span class="stat-label">照片拍摄</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 文章详情页 -->
+        <div id="articlePage" class="page">
+            <div class="article-container">
+                <button class="back-btn" onclick="showHome()">← 返回首页</button>
+                <div id="articleContent">
+                    <!-- 文章内容将通过JavaScript动态加载 -->
+                </div>
+                <!-- 文章目录 -->
+                <div id="articleToc" class="article-toc" style="display:none;">
+                    <h4>📑 目录</h4>
+                    <div id="tocList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分类页面 -->
+        <div id="categoriesPage" class="page">
+            <div class="categories-container">
+                <h2>文章分类</h2>
+                <div id="categoriesGrid" class="categories-grid">
+                    <!-- 分类网格将通过JavaScript动态加载 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 登录页面 -->
+        <div id="loginPage" class="page">
+            <div class="auth-container">
+                <h2>用户登录</h2>
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="loginUsername">用户名</label>
+                        <input type="text" id="loginUsername" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">密码</label>
+                        <input type="password" id="loginPassword" name="password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">登录</button>
+                </form>
+                <p>还没有账号？<a href="#" onclick="showRegister()">立即注册</a></p>
+            </div>
+        </div>
+
+        <!-- 注册页面 -->
+        <div id="registerPage" class="page">
+            <div class="auth-container">
+                <h2>用户注册</h2>
+                <form id="registerForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="registerUsername">用户名</label>
+                        <input type="text" id="registerUsername" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">邮箱</label>
+                        <input type="email" id="registerEmail" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">密码</label>
+                        <input type="password" id="registerPassword" name="password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">注册</button>
+                </form>
+                <p>已有账号？<a href="#" onclick="showLogin()">立即登录</a></p>
+            </div>
+        </div>
+
+        <!-- 写文章页面 -->
+        <div id="writePage" class="page">
+            <div class="write-container">
+                <h2>写新文章</h2>
+                <form id="writeForm" class="write-form">
+                    <div class="form-group">
+                        <label for="articleTitle">文章标题</label>
+                        <input type="text" id="articleTitle" name="title" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="articleCategory">分类</label>
+                            <select id="articleCategory" name="category" required>
+                                <option value="">请选择分类</option>
+                                <option value="未分类">未分类</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="articleTags">标签</label>
+                            <input type="text" id="articleTags" name="tags" placeholder="用逗号分隔多个标签">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleCover">封面图链接（可选）</label>
+                        <input type="text" id="articleCover" name="cover_image" placeholder="输入图片URL，或使用下方上传功能">
+                    </div>
+                    <div class="form-group">
+                        <label>文章内容（支持 Markdown 语法）</label>
+                        <div class="markdown-editor">
+                            <div class="editor-toolbar">
+                                <button type="button" class="toolbar-btn" onclick="insertMarkdown('**', '**')" title="加粗"><i class="fas fa-bold"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertMarkdown('*', '*')" title="斜体"><i class="fas fa-italic"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertMarkdown('# ', '')" title="标题"><i class="fas fa-heading"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertMarkdown('- ', '')" title="列表"><i class="fas fa-list"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertMarkdown('> ', '')" title="引用"><i class="fas fa-quote-right"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertMarkdown('```\n', '\n```')" title="代码块"><i class="fas fa-code"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertMarkdown('[', '](url)')" title="链接"><i class="fas fa-link"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertMarkdown('---\n', '')" title="分割线"><i class="fas fa-minus"></i></button>
+                                <span class="toolbar-separator"></span>
+                                <button type="button" class="toolbar-btn" onclick="togglePreview()" title="预览"><i class="fas fa-eye"></i> 预览</button>
+                            </div>
+                            <div class="editor-body">
+                                <textarea id="articleContent" name="content" rows="18" placeholder="在这里写文章...&#10;&#10;支持 Markdown 语法：&#10;# 标题&#10;**加粗** *斜体*&#10;- 列表项&#10;> 引用&#10;```代码块```"></textarea>
+                                <div id="previewPanel" class="preview-panel" style="display:none;">
+                                    <div id="previewContent" class="markdown-preview"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="image-upload-section">
+                        <h4>📷 图片上传</h4>
+                        <p>支持上传JPG、PNG格式的图片，最大2MB</p>
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-placeholder">
+                                <span class="upload-icon">📷</span>
+                                <p>点击或拖拽图片到此处上传</p>
+                                <p class="upload-hint">支持JPG、PNG格式，最大2MB</p>
+                            </div>
+                            <input type="file" id="imageUpload" accept=".jpg,.jpeg,.png,.gif" style="display: none;">
+                        </div>
+                        <div class="upload-preview" id="uploadPreview" style="display: none;">
+                            <div class="preview-container">
+                                <img id="previewImage" src="" alt="预览图片">
+                                <div class="preview-info">
+                                    <p id="previewName"></p>
+                                    <p id="previewSize"></p>
+                                </div>
+                                <div class="preview-actions">
+                                    <button type="button" class="btn-secondary" onclick="insertImageToContent()">插入到文章</button>
+                                    <button type="button" class="btn-secondary" onclick="useAsCover()">设为封面</button>
+                                    <button type="button" class="btn-cancel" onclick="cancelUpload()">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="upload-progress" id="uploadProgress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <p class="progress-text" id="progressText">上传中...</p>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">发布文章</button>
+                        <button type="button" class="btn-secondary" onclick="showHome()">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 编辑文章页面 -->
+        <div id="editPage" class="page">
+            <div class="write-container">
+                <h2>编辑文章</h2>
+                <form id="editForm" class="write-form">
+                    <input type="hidden" id="editArticleId">
+                    <div class="form-group">
+                        <label for="editTitle">文章标题</label>
+                        <input type="text" id="editTitle" name="title" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editCategory">分类</label>
+                            <select id="editCategory" name="category" required>
+                                <option value="">请选择分类</option>
+                                <option value="未分类">未分类</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTags">标签</label>
+                            <input type="text" id="editTags" name="tags" placeholder="用逗号分隔多个标签">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCover">封面图链接（可选）</label>
+                        <input type="text" id="editCover" name="cover_image" placeholder="输入图片URL">
+                    </div>
+                    <div class="form-group">
+                        <label>文章内容（支持 Markdown 语法）</label>
+                        <div class="markdown-editor">
+                            <div class="editor-toolbar">
+                                <button type="button" class="toolbar-btn" onclick="insertEditMarkdown('**', '**')" title="加粗"><i class="fas fa-bold"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertEditMarkdown('*', '*')" title="斜体"><i class="fas fa-italic"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertEditMarkdown('# ', '')" title="标题"><i class="fas fa-heading"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertEditMarkdown('- ', '')" title="列表"><i class="fas fa-list"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertEditMarkdown('> ', '')" title="引用"><i class="fas fa-quote-right"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertEditMarkdown('```\n', '\n```')" title="代码块"><i class="fas fa-code"></i></button>
+                                <button type="button" class="toolbar-btn" onclick="insertEditMarkdown('[', '](url)')" title="链接"><i class="fas fa-link"></i></button>
+                                <span class="toolbar-separator"></span>
+                                <button type="button" class="toolbar-btn" onclick="toggleEditPreview()" title="预览"><i class="fas fa-eye"></i> 预览</button>
+                            </div>
+                            <div class="editor-body">
+                                <textarea id="editContent" name="content" rows="18" placeholder="编辑文章内容..."></textarea>
+                                <div id="editPreviewPanel" class="preview-panel" style="display:none;">
+                                    <div id="editPreviewContent" class="markdown-preview"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">保存修改</button>
+                        <button type="button" class="btn-secondary" onclick="showHome()">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 个人中心页面 -->
+        <div id="profilePage" class="page">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="profileUsername">用户</h2>
+                        <p id="profileEmail">邮箱</p>
+                        <p id="profileJoinDate">注册时间</p>
+                    </div>
+                </div>
+                <div class="profile-stats">
+                    <div class="profile-stat-card">
+                        <span class="stat-number" id="statArticles">0</span>
+                        <span class="stat-label">文章</span>
+                    </div>
+                    <div class="profile-stat-card">
+                        <span class="stat-number" id="statViews">0</span>
+                        <span class="stat-label">总阅读</span>
+                    </div>
+                    <div class="profile-stat-card">
+                        <span class="stat-number" id="statComments">0</span>
+                        <span class="stat-label">评论</span>
+                    </div>
+                </div>
+                <div class="profile-articles">
+                    <h3>我的文章</h3>
+                    <div id="myArticlesList" class="articles-grid"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 消息提示 -->
+    <div id="message" class="message"></div>
+
+    <!-- 全局加载指示器 -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">加载中...</div>
+    </div>
+
+    <!-- 回到顶部按钮 -->
+    <button id="backToTop" class="back-to-top" onclick="scrollToTop()" title="回到顶部">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

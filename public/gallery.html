@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>摄影作品集 - 我的个人博客</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .gallery-header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .gallery-header p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .gallery-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+            color: white;
+            border-color: #ff7e5f;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: white;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .gallery-info {
+            padding: 1.5rem;
+        }
+        
+        .gallery-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .gallery-info p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .gallery-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .gallery-tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .empty-gallery {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #666;
+        }
+        
+        .empty-gallery i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #adb5bd;
+        }
+        
+        .upload-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 2rem;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            background: #218838;
+        }
+        
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .gallery-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>📷 摄影博客</h1>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="index.html#categories" class="nav-link">分类</a>
+                <a href="gallery.html" class="nav-link active">作品集</a>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="搜索作品..." onkeypress="handleGallerySearch(event)">
+                    <button class="search-btn" onclick="performGallerySearch()">搜索</button>
+                </div>
+                <a href="index.html#login" class="nav-link" id="loginLink">登录</a>
+                <a href="index.html#register" class="nav-link" id="registerLink">注册</a>
+                <a href="index.html#write" class="nav-link" id="writeLink" style="display:none">写文章</a>
+                <a href="javascript:void(0)" class="nav-link" onclick="logout()" id="logoutLink" style="display:none">退出</a>
+                <span id="userInfo" style="display:none"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 相册内容 -->
+    <div class="gallery-container">
+        <div class="gallery-header">
+            <h1>摄影作品集</h1>
+            <p>这里展示了一些精选的摄影作品。每张照片都讲述着一个独特的故事，记录着光影的瞬间。</p>
+        </div>
+        
+        <div class="gallery-filters">
+            <button class="filter-btn active" data-filter="all">全部作品</button>
+            <button class="filter-btn" data-filter="landscape">风光摄影</button>
+            <button class="filter-btn" data-filter="portrait">人像摄影</button>
+            <button class="filter-btn" data-filter="street">街头摄影</button>
+            <button class="filter-btn" data-filter="nature">自然摄影</button>
+            <button class="filter-btn" data-filter="macro">微距摄影</button>
+        </div>
+        
+        <div class="gallery-grid" id="galleryGrid">
+            <!-- 作品将通过JavaScript动态加载 -->
+        </div>
+        
+        <div class="empty-gallery" id="emptyGallery" style="display: none;">
+            <i class="fas fa-camera"></i>
+            <h3>暂无作品</h3>
+            <p>还没有上传摄影作品，快来上传你的第一张作品吧！</p>
+        </div>
+        
+        <div class="upload-section" id="uploadSection" style="display: none;">
+            <h2>分享你的摄影作品</h2>
+            <p>将你的摄影作品上传到作品集，与大家分享你的创作。</p>
+            <button class="upload-btn" onclick="showUploadModal()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                上传作品
+            </button>
+        </div>
+    </div>
+
+    <!-- 上传模态框 -->
+    <div class="modal" id="uploadModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>上传摄影作品</h3>
+                <button class="modal-close" onclick="closeUploadModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="uploadArea" class="upload-area">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>点击或拖拽图片到这里上传</p>
+                    <p class="upload-hint">支持 JPG、PNG、GIF 格式，最大 2MB</p>
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                </div>
+                <div id="uploadPreview" style="display: none;">
+                    <img id="previewImage" src="" alt="预览">
+                    <div class="preview-info">
+                        <p id="previewName"></p>
+                        <p id="previewSize"></p>
+                    </div>
+                    <div class="preview-actions">
+                        <button onclick="cancelUpload()">取消</button>
+                        <button onclick="uploadGalleryImage()" class="btn-primary">上传</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="imageTitle">作品标题</label>
+                    <input type="text" id="imageTitle" placeholder="请输入作品标题">
+                </div>
+                <div class="form-group">
+                    <label for="imageDescription">作品描述</label>
+                    <textarea id="imageDescription" rows="3" placeholder="描述你的作品..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="imageTags">标签（用逗号分隔）</label>
+                    <input type="text" id="imageTags" placeholder="例如：风光,日落,城市">
+                </div>
+                <div class="form-group">
+                    <label for="imageCategory">分类</label>
+                    <select id="imageCategory">
+                        <option value="landscape">风光摄影</option>
+                        <option value="portrait">人像摄影</option>
+                        <option value="street">街头摄影</option>
+                        <option value="nature">自然摄影</option>
+                        <option value="macro">微距摄影</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+                <div id="uploadProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <p id="progressText">上传中...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载指示器 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- 消息提示 -->
+    <div class="message" id="message"></div>
+
+    <script>
+        // 画廊作品数据 - 将从API加载
+        let galleryItems = [];
+
+        // 当前用户状态
+        let currentUser = null;
+        let currentFilter = 'all';
+
+        // API基础URL - 自动检测环境
+        const API_BASE_URL = (() => {
+            // 如果是本地开发环境（localhost 或 127.0.0.1）
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                return 'http://localhost:3000/api';
+            }
+            
+            // 如果是文件协议（file://），也使用 localhost
+            if (window.location.protocol === 'file:') {
+                return 'http://localhost:3000/api';
+            }
+            
+            // 其他情况（生产环境）
+            return '/api';
+        })();
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateNavigation();
+                document.getElementById('uploadSection').style.display = 'block';
+            }
+            
+            // 加载画廊作品
+            loadGalleryItems();
+            
+            // 绑定筛选按钮事件
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.getAttribute('data-filter');
+                    loadGalleryItems();
+                });
+            });
+            
+            // 初始化上传功能
+            initializeGalleryUpload();
+        });
+
+        // 更新导航栏
+        function updateNavigation() {
+            const loginLink = document.getElementById('loginLink');
+            const registerLink = document.getElementById('registerLink');
+            const userInfo = document.getElementById('userInfo');
+            const logoutLink = document.getElementById('logoutLink');
+            
+            if (currentUser) {
+                loginLink.style.display = 'none';
+                registerLink.style.display = 'none';
+                userInfo.style.display = 'inline';
+                userInfo.textContent = `欢迎，${currentUser.username}`;
+                logoutLink.style.display = 'inline';
+            }
+        }
+
+        // 加载画廊作品
+        async function loadGalleryItems() {
+            showLoading(true);
+            try {
+                const url = currentFilter === 'all' 
+                    ? `${API_BASE_URL}/gallery/items` 
+                    : `${API_BASE_URL}/gallery/items?category=${currentFilter}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    galleryItems = data.items || [];
+                    renderGallery();
+                } else {
+                    showMessage('加载作品失败: ' + (data.error || '未知错误'), 'error');
+                }
+            } catch (error) {
+                console.error('加载画廊作品失败:', error);
+                showMessage('网络错误，请稍后重试', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // 渲染相册
+        function renderGallery() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            const emptyGallery = document.getElementById('emptyGallery');
+            
+            // 筛选作品（本地筛选，但API已经按分类筛选了）
+            const filteredItems = currentFilter === 'all' 
+                ? galleryItems 
+                : galleryItems.filter(item => item.category === currentFilter);
+            
+            if (filteredItems.length === 0) {
+                galleryGrid.style.display = 'none';
+                emptyGallery.style.display = 'block';
+                return;
+            }
+            
+            galleryGrid.style.display = 'grid';
+            emptyGallery.style.display = 'none';
+            
+            // 生成作品HTML
+            galleryGrid.innerHTML = filteredItems.map(item => `
+                <div class="gallery-item" data-category="${item.category}" onclick="showGalleryItemDetail(${item.id})">
+                    <img src="${item.image_url}" alt="${item.title}" class="gallery-image">
+                    <div class="gallery-info">
+                        <h3>${item.title}</h3>
+                        <p>${item.description || ''}</p>
+                        <div class="gallery-tags">
+                            ${item.tags ? item.tags.split(',').map(tag => `<span class="gallery-tag">${tag.trim()}</span>`).join('') : ''}
+                        </div>
+                        <small>${formatDate(item.created_at)}</small>
+                        <small style="display: block; margin-top: 5px;">作者: ${item.author_name || '未知'}</small>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 初始化上传功能
+        function initializeGalleryUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('imageUpload');
+            
+            if (!uploadArea || !fileInput) return;
+            
+            uploadArea.addEventListener('click', () => fileInput.click());
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#ff7e5f';
+                uploadArea.style.backgroundColor = 'rgba(255, 126, 95, 0.1)';
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.borderColor = '#adb5bd';
+                uploadArea.style.backgroundColor = '';
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#adb5bd';
+                uploadArea.style.backgroundColor = '';
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleGalleryImageFile(e.dataTransfer.files[0]);
+                }
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleGalleryImageFile(e.target.files[0]);
+                }
+            });
+        }
+
+        // 处理图片文件
+        function handleGalleryImageFile(file) {
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            if (!validTypes.includes(file.type)) {
+                showMessage('请选择JPG、PNG或GIF格式的图片', 'error');
+                return;
+            }
+            
+            const maxSize = 2 * 1024 * 1024;
+            if (file.size > maxSize) {
+                showMessage('图片大小不能超过2MB', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const uploadArea = document.getElementById('uploadArea');
+                const uploadPreview = document.getElementById('uploadPreview');
+                const previewImage = document.getElementById('previewImage');
+                const previewName = document.getElementById('previewName');
+                const previewSize = document.getElementById('previewSize');
+                
+                uploadArea.style.display = 'none';
+                uploadPreview.style.display = 'block';
+                
+                previewImage.src = e.target.result;
+                previewName.textContent = `文件名: ${file.name}`;
+                previewSize.textContent = `文件大小: ${formatFileSize(file.size)}`;
+                
+                window.currentGalleryImageFile = file;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 显示上传模态框
+        function showUploadModal() {
+            if (!currentUser) {
+                // 显示更友好的登录提示
+                const confirmLogin = confirm('上传作品需要先登录。是否立即跳转到登录页面？');
+                if (confirmLogin) {
+                    // 跳转到首页的登录页面
+                    window.location.href = 'index.html#login';
+                }
+                return;
+            }
+            document.getElementById('uploadModal').style.display = 'block';
+        }
+
+        // 关闭上传模态框
+        function closeUploadModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+            cancelUpload();
+            resetUploadForm();
+        }
+
+        // 取消上传
+        function cancelUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const uploadPreview = document.getElementById('uploadPreview');
+            const fileInput = document.getElementById('imageUpload');
+            
+            uploadArea.style.display = 'flex';
+            uploadPreview.style.display = 'none';
+            fileInput.value = '';
+            
+            delete window.currentGalleryImageFile;
+        }
+
+        // 重置上传表单
+        function resetUploadForm() {
+            document.getElementById('imageTitle').value = '';
+            document.getElementById('imageDescription').value = '';
+            document.getElementById('imageTags').value = '';
+            document.getElementById('imageCategory').value = 'landscape';
+        }
+
+        // 上传作品图片
+        async function uploadGalleryImage() {
+            if (!window.currentGalleryImageFile) {
+                showMessage('请先选择图片', 'error');
+                return;
+            }
+            
+            const title = document.getElementById('imageTitle').value.trim();
+            const description = document.getElementById('imageDescription').value.trim();
+            const tags = document.getElementById('imageTags').value.trim();
+            const category = document.getElementById('imageCategory').value;
+            
+            if (!title) {
+                showMessage('请输入作品标题', 'error');
+                return;
+            }
+            
+            // 显示上传进度
+            const uploadProgress = document.getElementById('uploadProgress');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            uploadProgress.style.display = 'block';
+            progressFill.style.width = '0%';
+            progressText.textContent = '上传中...';
+            
+            try {
+                // 获取JWT令牌
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('请先登录');
+                }
+                
+                // 创建FormData对象
+                const formData = new FormData();
+                formData.append('image', window.currentGalleryImageFile);
+                formData.append('title', title);
+                formData.append('description', description);
+                formData.append('category', category);
+                formData.append('tags', tags);
+                
+                // 更新进度
+                progressFill.style.width = '30%';
+                progressText.textContent = '上传文件...';
+                
+                // 发送上传请求
+                const response = await fetch(`${API_BASE_URL}/gallery/items`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+                
+                // 更新进度
+                progressFill.style.width = '70%';
+                progressText.textContent = '处理中...';
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || '上传失败');
+                }
+                
+                // 更新进度
+                progressFill.style.width = '100%';
+                progressText.textContent = '上传完成！';
+                
+                // 显示成功消息
+                showMessage('作品上传成功！已保存到数据库', 'success');
+                
+                // 重新加载画廊作品
+                setTimeout(() => {
+                    loadGalleryItems();
+                    closeUploadModal();
+                    uploadProgress.style.display = 'none';
+                    progressFill.style.width = '0%';
+                }, 1000);
+                
+            } catch (error) {
+                console.error('作品上传失败:', error);
+                showMessage(`作品上传失败: ${error.message}`, 'error');
+                uploadProgress.style.display = 'none';
+                progressFill.style.width = '0%';
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('token');
+            updateNavigation();
+            showMessage('已退出登录', 'info');
+            document.getElementById('uploadSection').style.display = 'none';
+        }
+
+        // 显示/隐藏加载指示器
+        function showLoading(show = true) {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (show) {
+                loadingOverlay.classList.add('active');
+            } else {
+                loadingOverlay.classList.remove('active');
+            }
+        }
+
+        // 显示消息
+        function showMessage(message, type = 'info') {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = message;
+            messageEl.className = `message ${type} show`;
+            
+            setTimeout(() => {
+                messageEl.classList.remove('show');
+            }, 3000);
+        }
+
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            if (!dateString) return '未知日期';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-CN') + ' ' + date.toLocaleTimeString('zh-CN', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+
+        // 页面切换函数（从主脚本复制）
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // 显示作品详情
+        async function showGalleryItemDetail(itemId) {
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/gallery/items/${itemId}`);
+                const item = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(item.error || '加载作品详情失败');
+                }
+                
+                // 创建详情模态框
+                const detailModal = document.createElement('div');
+                detailModal.className = 'modal';
+                detailModal.id = 'detailModal';
+                detailModal.style.display = 'block';
+                
+                const tagsArray = item.tags ? item.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
+                
+                detailModal.innerHTML = `
+                    <div class="modal-content" style="max-width: 800px;">
+                        <div class="modal-header">
+                            <h3>${item.title}</h3>
+                            <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="gallery-detail">
+                                <img src="${item.image_url}" alt="${item.title}" class="detail-image">
+                                <div class="detail-info">
+                                    <div class="detail-meta">
+                                        <span class="detail-category">${getCategoryName(item.category)}</span>
+                                        <span class="detail-date">${formatDate(item.created_at)}</span>
+                                        <span class="detail-views">浏览: ${item.views || 0}</span>
+                                    </div>
+                                    <p class="detail-description">${item.description || '暂无描述'}</p>
+                                    <div class="detail-tags">
+                                        ${tagsArray.map(tag => `<span class="detail-tag">${tag}</span>`).join('')}
+                                    </div>
+                                    <div class="detail-author">
+                                        <strong>作者:</strong> ${item.author_name || '未知'}
+                                    </div>
+                                    <div class="detail-actions">
+                                        <button class="btn-primary" onclick="downloadImage('${item.image_url}', '${item.title}')">
+                                            <i class="fas fa-download"></i> 下载图片
+                                        </button>
+                                        <button class="btn-secondary" onclick="closeDetailModal()">
+                                            关闭
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(detailModal);
+                
+                // 添加详情模态框样式
+                const style = document.createElement('style');
+                style.textContent = `
+                    .gallery-detail {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2rem;
+                    }
+                    
+                    .detail-image {
+                        width: 100%;
+                        max-height: 500px;
+                        object-fit: contain;
+                        border-radius: 10px;
+                        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+                    }
+                    
+                    .detail-info {
+                        padding: 1rem 0;
+                    }
+                    
+                    .detail-meta {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 1rem;
+                        margin-bottom: 1rem;
+                        color: #666;
+                        font-size: 0.9rem;
+                    }
+                    
+                    .detail-category {
+                        background: #ff7e5f;
+                        color: white;
+                        padding: 0.3rem 0.8rem;
+                        border-radius: 20px;
+                        font-weight: 600;
+                    }
+                    
+                    .detail-date, .detail-views {
+                        background: #e9ecef;
+                        color: #495057;
+                        padding: 0.3rem 0.8rem;
+                        border-radius: 20px;
+                    }
+                    
+                    .detail-description {
+                        font-size: 1.1rem;
+                        line-height: 1.6;
+                        color: #444;
+                        margin-bottom: 1.5rem;
+                    }
+                    
+                    .detail-tags {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 0.5rem;
+                        margin-bottom: 1rem;
+                    }
+                    
+                    .detail-tag {
+                        background: #e9ecef;
+                        color: #495057;
+                        padding: 0.3rem 0.8rem;
+                        border-radius: 20px;
+                        font-size: 0.85rem;
+                    }
+                    
+                    .detail-author {
+                        margin-bottom: 1.5rem;
+                        font-size: 1rem;
+                        color: #555;
+                    }
+                    
+                    .detail-actions {
+                        display: flex;
+                        gap: 1rem;
+                        margin-top: 1.5rem;
+                    }
+                    
+                    @media (max-width: 768px) {
+                        .gallery-detail {
+                            gap: 1rem;
+                        }
+                        
+                        .detail-image {
+                            max-height: 300px;
+                        }
+                        
+                        .detail-actions {
+                            flex-direction: column;
+                        }
+                        
+                        .detail-meta {
+                            flex-direction: column;
+                            align-items: flex-start;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+            } catch (error) {
+                console.error('加载作品详情失败:', error);
+                showMessage(`加载作品详情失败: ${error.message}`, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // 关闭详情模态框
+        function closeDetailModal() {
+            const detailModal = document.getElementById('detailModal');
+            if (detailModal) {
+                detailModal.remove();
+            }
+        }
+
+        // 获取分类名称
+        function getCategoryName(category) {
+            const categoryMap = {
+                'landscape': '风光摄影',
+                'portrait': '人像摄影',
+                'street': '街头摄影',
+                'nature': '自然摄影',
+                'macro': '微距摄影',
+                'other': '其他'
+            };
+            return categoryMap[category] || category;
+        }
+
+        // 下载图片
+        function downloadImage(imageUrl, fileName) {
+            const link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = fileName || 'photography-work';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showMessage('开始下载图片', 'info');
+        }
+
+        // 作品集搜索功能
+        function handleGallerySearch(event) {
+            if (event.key === 'Enter') {
+                performGallerySearch();
+            }
+        }
+
+        function performGallerySearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                // 如果没有搜索词，恢复当前筛选
+                loadGalleryItems();
+                return;
+            }
+            
+            const galleryGrid = document.getElementById('galleryGrid');
+            const emptyGallery = document.getElementById('emptyGallery');
+            
+            // 在所有作品中搜索
+            const filteredItems = galleryItems.filter(item => 
+                item.title.toLowerCase().includes(searchTerm) ||
+                (item.description && item.description.toLowerCase().includes(searchTerm)) ||
+                (item.tags && item.tags.toLowerCase().includes(searchTerm)) ||
+                item.category.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filteredItems.length === 0) {
+                galleryGrid.style.display = 'none';
+                emptyGallery.style.display = 'block';
+                emptyGallery.innerHTML = `
+                    <i class="fas fa-search"></i>
+                    <h3>未找到相关作品</h3>
+                    <p>没有找到与"${searchTerm}"相关的作品，请尝试其他关键词。</p>
+                `;
+                return;
+            }
+            
+            galleryGrid.style.display = 'grid';
+            emptyGallery.style.display = 'none';
+            
+            // 生成搜索结果HTML
+            galleryGrid.innerHTML = filteredItems.map(item => `
+                <div class="gallery-item" data-category="${item.category}" onclick="showGalleryItemDetail(${item.id})">
+                    <img src="${item.image_url}" alt="${item.title}" class="gallery-image">
+                    <div class="gallery-info">
+                        <h3>${item.title}</h3>
+                        <p>${item.description || ''}</p>
+                        <div class="gallery-tags">
+                            ${item.tags ? item.tags.split(',').map(tag => `<span class="gallery-tag">${tag.trim()}</span>`).join('') : ''}
+                        </div>
+                        <small>${formatDate(item.created_at)}</small>
+                        <small style="display: block; margin-top: 5px;">作者: ${item.author_name || '未知'}</small>
+                    </div>
+                </div>
+            `).join('');
+            
+            // 显示搜索结果数量
+            showMessage(`找到 ${filteredItems.length} 个相关作品`, 'info');
+        }
+    </script>
+</body>
+</html>

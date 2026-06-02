@@ -1,0 +1,62 @@
+# 端口配置说明
+
+## 当前配置
+- 个人博客服务器端口：3000
+- 访问地址：http://localhost:3000
+- 3001端口已空闲
+
+## 如何切换到其他端口（如3001）
+
+### 方法1：修改.env文件
+1. 打开 `C:\Users\Lenovo\Desktop\my-personal-blog\.env` 文件
+2. 找到以下配置行：
+   ```
+   # 服务器配置
+   PORT=3000
+   NODE_ENV=development
+   
+   # 安全配置
+   CORS_ORIGIN=http://localhost:3000
+   ```
+3. 修改为：
+   ```
+   # 服务器配置
+   PORT=3001
+   NODE_ENV=development
+   
+   # 安全配置
+   CORS_ORIGIN=http://localhost:3001
+   ```
+4. 保存文件
+5. 重启服务器
+
+### 方法2：使用命令快速切换
+在命令行中执行以下命令：
+
+```bash
+cd "C:\Users\Lenovo\Desktop\my-personal-blog"
+# 停止当前服务器（如果正在运行）
+# 然后修改.env文件
+(Get-Content .env) -replace 'PORT=3000', 'PORT=3001' -replace 'CORS_ORIGIN=http://localhost:3000', 'CORS_ORIGIN=http://localhost:3001' | Set-Content .env
+# 重新启动服务器
+node server.js
+```
+
+### 方法3：使用备份配置
+3001端口配置已备份为 `.env.backup.3000` 文件。要恢复：
+```bash
+cd "C:\Users\Lenovo\Desktop\my-personal-blog"
+copy .env.backup.3000 .env /Y
+```
+
+## 注意事项
+1. 修改端口后需要重启服务器才能生效
+2. 如果使用开机自启动，需要更新相关配置
+3. 确保目标端口没有被其他服务占用
+
+## 当前状态
+- ✅ 个人博客服务器运行在3000端口
+- ✅ 服务器运行正常（HTTP 200）
+- ✅ 3001端口已空闲
+
+当您需要切换到其他端口时，请按照上述说明操作。
